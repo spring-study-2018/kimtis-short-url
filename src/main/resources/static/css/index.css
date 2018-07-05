@@ -1,3 +1,4 @@
-p {
-    color: gray;
+.error-msg {
+    color: red;
+    font-weight: bold;
 }
