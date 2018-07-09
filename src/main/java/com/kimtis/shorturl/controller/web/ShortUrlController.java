@@ -1,6 +1,6 @@
 package com.kimtis.shorturl.controller.web;
 
-import com.kimtis.shorturl.domain.entity.Condition;
+import com.kimtis.shorturl.domain.model.request.Condition;
 import com.kimtis.shorturl.service.ShortUrlService;
 import com.kimtis.shorturl.domain.entity.ShortUrl;
 import lombok.RequiredArgsConstructor;

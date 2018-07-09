@@ -26,10 +26,10 @@ repositories {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-redis')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-mustache')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('biz.paluch.redis:lettuce:4.4.4.Final')
     runtime('com.h2database:h2')
     runtime('mysql:mysql-connector-java')
     compileOnly('org.projectlombok:lombok')

@@ -1,4 +1,4 @@
-package com.kimtis.shorturl.domain.entity;
+package com.kimtis.shorturl.domain.model.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
