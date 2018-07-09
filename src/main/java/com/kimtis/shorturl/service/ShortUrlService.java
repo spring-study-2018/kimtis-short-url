@@ -2,14 +2,11 @@ package com.kimtis.shorturl.service;
 
 import com.kimtis.shorturl.domain.entity.ShortUrl;
 import com.kimtis.shorturl.domain.model.cache.CachedShortUrl;
-import com.kimtis.shorturl.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,17 +21,18 @@ public class ShortUrlService {
         long id = ShortUrl.toId(code);
         CachedShortUrl cachedShortUrl = shortUrlRedisProvider.get(id);
 
-        Optional<ShortUrl> optionalShortUrl;
         if (cachedShortUrl == null) {
-            optionalShortUrl = shortUrlRepository.findById(id);
-            shortUrlRedisProvider.set(id, optionalShortUrl.orElse(null));
-            log.info("return data from db => {}", code);
-        } else {
-            optionalShortUrl = Optional.ofNullable(cachedShortUrl.getShortUrl());
-            log.info("return data from cache => {}", code);
-        }
+            // cache data not exist, find from DB
+            ShortUrl shortUrlFromDB = shortUrlRepository.findById(id).orElse(null);
+            // update cache with DB data
+            shortUrlRedisProvider.set(id, shortUrlFromDB);
 
-        return optionalShortUrl.orElseThrow(() -> new ResourceNotFoundException("Page not found: /" + code));
+            log.info("return data from db => {}", code);
+            return shortUrlFromDB;
+        } else {
+            log.info("return data from cache => {}", code);
+            return cachedShortUrl.getShortUrl();
+        }
     }
 
     public ShortUrl save(String link) {

@@ -1,6 +1,7 @@
 package com.kimtis.shorturl.controller.web;
 
 import com.kimtis.shorturl.domain.model.request.Condition;
+import com.kimtis.shorturl.exception.ResourceNotFoundException;
 import com.kimtis.shorturl.service.ShortUrlService;
 import com.kimtis.shorturl.domain.entity.ShortUrl;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,15 @@ public class ShortUrlController {
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
     public ResponseEntity redirect(@PathVariable @Pattern(regexp = ShortUrlService.NUMERIC_AND_ALPHABETIC) String code) {
         ShortUrl shortUrl = shortUrlService.get(code);
-        HttpStatus status = HttpStatus.valueOf(shortUrl.getStatus());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, shortUrl.getLink());
-        return new ResponseEntity(headers, status);
+        if (shortUrl != null) {
+            HttpStatus status = HttpStatus.valueOf(shortUrl.getStatus());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.LOCATION, shortUrl.getLink());
+            return new ResponseEntity(headers, status);
+        }
+        else {
+            throw new ResourceNotFoundException("Page not found: /" + code);
+        }
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
