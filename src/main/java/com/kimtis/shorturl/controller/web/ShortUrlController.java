@@ -1,9 +1,9 @@
 package com.kimtis.shorturl.controller.web;
 
-import com.kimtis.shorturl.domain.model.request.Condition;
+import com.kimtis.shorturl.domain.request.Condition;
 import com.kimtis.shorturl.exception.ResourceNotFoundException;
 import com.kimtis.shorturl.service.ShortUrlService;
-import com.kimtis.shorturl.domain.entity.ShortUrl;
+import com.kimtis.shorturl.domain.ShortUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

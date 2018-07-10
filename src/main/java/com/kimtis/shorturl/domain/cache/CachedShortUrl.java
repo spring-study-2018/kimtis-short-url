@@ -1,6 +1,6 @@
-package com.kimtis.shorturl.domain.model.cache;
+package com.kimtis.shorturl.domain.cache;
 
-import com.kimtis.shorturl.domain.entity.ShortUrl;
+import com.kimtis.shorturl.domain.ShortUrl;
 import lombok.Data;
 
 @Data

@@ -1,12 +1,13 @@
 package com.kimtis.shorturl.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kimtis.shorturl.domain.entity.ShortUrl;
-import com.kimtis.shorturl.domain.model.cache.CachedShortUrl;
+import com.kimtis.shorturl.domain.ShortUrl;
+import com.kimtis.shorturl.domain.cache.CachedShortUrl;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,7 +19,9 @@ public class ShortUrlRedisProvider {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String NAMESPACE = "short-url";
     private static final String VERSION = "v1";
-    private static final long EXPIRED_SECONDS = 10;
+
+    @Value("${spring.redis.default.expire-time-seconds}")
+    private long expireTimeSeconds;
 
     private final StatefulRedisConnection<String, String> redisConnection;
 
@@ -35,7 +38,7 @@ public class ShortUrlRedisProvider {
         try {
             CachedShortUrl cachedShortUrl = new CachedShortUrl(shortUrl);
             String value = OBJECT_MAPPER.writeValueAsString(cachedShortUrl);
-            redisConnection.sync().setex(getKey(id), EXPIRED_SECONDS, value);
+            redisConnection.sync().setex(getKey(id), expireTimeSeconds, value);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }

@@ -1,18 +1,11 @@
-package com.kimtis.shorturl.domain.entity;
+package com.kimtis.shorturl.domain;
 
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 @Data
 @Builder
-@Entity
 public class ShortUrl {
-    @Id
-    @GeneratedValue
     private Long id;
     private String link;
     private Integer status;

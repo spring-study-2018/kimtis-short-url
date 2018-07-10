@@ -1,7 +1,7 @@
 package com.kimtis.shorturl.service;
 
-import com.kimtis.shorturl.domain.entity.ShortUrl;
-import com.kimtis.shorturl.domain.model.cache.CachedShortUrl;
+import com.kimtis.shorturl.domain.ShortUrl;
+import com.kimtis.shorturl.domain.cache.CachedShortUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ShortUrlService {
-    private final ShortUrlRepository shortUrlRepository;
+    private final ShortUrlJdbcRepository shortUrlJdbcRepository;
     private final ShortUrlRedisProvider shortUrlRedisProvider;
 
     public static final String NUMERIC_AND_ALPHABETIC = "[0-9a-zA-Z]*";
@@ -23,20 +23,22 @@ public class ShortUrlService {
 
         if (cachedShortUrl == null) {
             // cache data not exist, find from DB
-            ShortUrl shortUrlFromDB = shortUrlRepository.findById(id).orElse(null);
+            ShortUrl shortUrlFromDB = shortUrlJdbcRepository.findById(id);
+
             // update cache with DB data
             shortUrlRedisProvider.set(id, shortUrlFromDB);
 
             log.info("return data from db => {}", code);
             return shortUrlFromDB;
-        } else {
+        }
+        else {
             log.info("return data from cache => {}", code);
             return cachedShortUrl.getShortUrl();
         }
     }
 
     public ShortUrl save(String link) {
-        return shortUrlRepository.save(
+        return shortUrlJdbcRepository.save(
             ShortUrl.builder()
                 .link(link)
                 .status(HttpStatus.MOVED_PERMANENTLY.value())
