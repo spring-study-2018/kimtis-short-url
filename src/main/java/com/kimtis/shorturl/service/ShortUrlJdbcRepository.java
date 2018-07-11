@@ -24,7 +24,7 @@ public class ShortUrlJdbcRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private static final String QUERY_CREATE = "INSERT INTO SHORT_URL (LINK, STATUS) VALUES (?, ?)";
-    private static final String QUERY_READ = "SELECT * FROM SHORT_URL WHERE ID = ? limit 1";
+    private static final String QUERY_READ = "SELECT * FROM SHORT_URL WHERE ID = ? LIMIT 1";
 
     public ShortUrl findById(long id) {
         return singleResultOrNull(
@@ -33,10 +33,10 @@ public class ShortUrlJdbcRepository {
                     @Override
                     public ShortUrl mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return ShortUrl.builder()
-                                .id(rs.getLong("ID"))
-                                .link(rs.getString("LINK"))
-                                .status(rs.getInt("STATUS"))
-                                .build();
+                            .id(rs.getLong("ID"))
+                            .link(rs.getString("LINK"))
+                            .status(rs.getInt("STATUS"))
+                            .build();
                     }
                 }
             )
