@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Short URL</title>
-    <link rel="stylesheet" href="/css/index.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <!-- Plugin CSS -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/css/freelancer.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Oops!!</h1>
-<p class="error-msg">{{status}} : {{error}}</p>
-<p><a href="/">Go to register short url</a></p>
+<header class="masthead bg-danger text-white text-center">
+    <div class="container">
+        <h1 class="text-uppercase mb-0">Sorry, Oops!!</h1>
+        <p class="error-msg">{{status}}, {{error}}</p>
+        <hr>
+        <h2 class="mb-0"><a href="/" style="color: #007bff;">Return home</a></h2>
+    </div>
+</header>
 </body>
 </html>

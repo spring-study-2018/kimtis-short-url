@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Short URL</title>
-    <link rel="stylesheet" href="css/index.css">
-</head>
-<body>
-    <h1>Short URL registered</h1>
-    <p>link to <a href="/{{code}}">{{url}}</a></p>
-    <p><a href="/">Go to register short url</a></p>
-</body>
-</html>
+{{> layout/header}}
+
+<!-- Header -->
+<header class="masthead bg-warning text-white text-center">
+    <div class="container">
+        <img class="img-fluid mb-5 d-block mx-auto" src="https://cdn4.iconfinder.com/data/icons/web-links/512/41-512.png" alt="" style="height: 256px">
+        <h1 class="text-uppercase mb-0">Registered your Link</h1>
+        <hr>
+        <h1 class="mb-0"><a href="/{{code}}" style="color: #007bff;">{{url}}</a></h1>
+    </div>
+</header>
+
+{{> layout/footer}}
