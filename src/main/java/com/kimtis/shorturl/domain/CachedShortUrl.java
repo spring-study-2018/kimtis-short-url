@@ -1,6 +1,5 @@
-package com.kimtis.shorturl.domain.cache;
+package com.kimtis.shorturl.domain;
 
-import com.kimtis.shorturl.domain.ShortUrl;
 import lombok.Data;
 
 @Data

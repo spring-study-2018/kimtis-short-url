@@ -2,7 +2,7 @@ package com.kimtis.shorturl.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kimtis.shorturl.domain.ShortUrl;
-import com.kimtis.shorturl.domain.cache.CachedShortUrl;
+import com.kimtis.shorturl.domain.CachedShortUrl;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,9 @@ public class ShortUrlRedisProvider {
     public CachedShortUrl get(long id) {
         try {
             String value = redisConnection.sync().get(getKey(id));
-            return OBJECT_MAPPER.readValue(String.valueOf(value), CachedShortUrl.class);
+            CachedShortUrl result = OBJECT_MAPPER.readValue(String.valueOf(value), CachedShortUrl.class);
+            log.debug("Cache {}: {} => {}", (result != null) ? "hit" : "miss", getKey(id), result);
+            return result;
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -39,6 +41,7 @@ public class ShortUrlRedisProvider {
             CachedShortUrl cachedShortUrl = new CachedShortUrl(shortUrl);
             String value = OBJECT_MAPPER.writeValueAsString(cachedShortUrl);
             redisConnection.sync().setex(getKey(id), expireTimeSeconds, value);
+            log.debug("Cache update: {} => {}", getKey(id), value);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }

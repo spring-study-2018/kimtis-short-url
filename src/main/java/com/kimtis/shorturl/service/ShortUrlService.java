@@ -1,11 +1,10 @@
 package com.kimtis.shorturl.service;
 
 import com.kimtis.shorturl.domain.ShortUrl;
-import com.kimtis.shorturl.domain.cache.CachedShortUrl;
+import com.kimtis.shorturl.domain.CachedShortUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -28,21 +27,10 @@ public class ShortUrlService {
             // update cache with DB data
             shortUrlRedisProvider.set(id, shortUrlFromDB);
 
-            log.info("return data from db => {}", code);
             return shortUrlFromDB;
         }
         else {
-            log.info("return data from cache => {}", code);
             return cachedShortUrl.getShortUrl();
         }
-    }
-
-    public ShortUrl save(String link) {
-        return shortUrlJdbcRepository.save(
-            ShortUrl.builder()
-                .link(link)
-                .status(HttpStatus.MOVED_PERMANENTLY.value())
-                .build()
-        );
     }
 }

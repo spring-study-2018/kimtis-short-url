@@ -1,4 +1,4 @@
-package com.kimtis.shorturl.controller.api;
+package com.kimtis.shorturl.controller;
 
 import com.kimtis.shorturl.domain.ShortUrl;
 import com.kimtis.shorturl.service.ShortUrlService;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 @RestController
 @RequestMapping("/api/v1/short-url")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ShortUrlV1Controller {
+public class ShortUrlController {
     private final ShortUrlService shortUrlService;
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
