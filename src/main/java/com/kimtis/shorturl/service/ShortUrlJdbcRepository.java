@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,23 +22,20 @@ public class ShortUrlJdbcRepository {
 
     private static final String QUERY_READ = "SELECT * FROM SHORT_URL WHERE ID = ? LIMIT 1";
 
-    public ShortUrl findById(long id) {
-        ShortUrl result = singleResultOrNull(
-            jdbcTemplate.query(QUERY_READ, new Object[]{id},
-                new RowMapper<ShortUrl>() {
-                    @Override
-                    public ShortUrl mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return ShortUrl.builder()
+    public Observable<ShortUrl> findById(long id) {
+        return Observable.fromCallable(
+                () -> singleResultOrNull(
+                    jdbcTemplate.query(QUERY_READ, new Object[]{id},
+                        (rs, rowNum) -> ShortUrl.builder()
                             .id(rs.getLong("ID"))
                             .link(rs.getString("LINK"))
                             .status(rs.getInt("STATUS"))
-                            .build();
-                    }
-                }
+                            .build()
+                    )
+                )
             )
-        );
-        log.debug("Database get: <{}> => {}", id, result);
-        return result;
+            .doOnNext(shortUrl -> log.debug("Database get: <{}> => {}", id, shortUrl))
+            .subscribeOn(Schedulers.io());
     }
 
     private ShortUrl singleResultOrNull(List<ShortUrl> resultSet) {

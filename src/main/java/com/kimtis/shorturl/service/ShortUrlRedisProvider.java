@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -25,15 +26,18 @@ public class ShortUrlRedisProvider {
 
     private final StatefulRedisConnection<String, String> redisConnection;
 
-    public CachedShortUrl get(long id) {
-        try {
-            String value = redisConnection.sync().get(getKey(id));
-            CachedShortUrl result = OBJECT_MAPPER.readValue(String.valueOf(value), CachedShortUrl.class);
-            log.debug("Cache {}: {} => {}", (result != null) ? "hit" : "miss", getKey(id), result);
-            return result;
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+    public Observable<CachedShortUrl> get(long id) {
+        return redisConnection.reactive()
+            .get(getKey(id))
+            .defaultIfEmpty(null)
+            .map(value -> {
+                try {
+                    log.debug("Cache {}: {} => {}", (value != null) ? "hit" : "miss", getKey(id), value);
+                    return OBJECT_MAPPER.readValue(String.valueOf(value), CachedShortUrl.class);
+                } catch (IOException ioe) {
+                    throw new RuntimeException(ioe);
+                }
+            });
     }
 
     public void set(long id, ShortUrl shortUrl) {
